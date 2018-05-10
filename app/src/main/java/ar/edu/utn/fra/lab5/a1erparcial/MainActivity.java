@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +18,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,21 +45,16 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
 
     //TODO: Limpiar MainActivity, pasando lo necesario a las clases Controlador y VistaControlador para usar MVC
     Adapter adaptador;
-    ImageView imgContacto;
-    TextView main_nombre;
-    TextView main_telefono;
     List<Modelo> contactos;
     Button btn_llamar;
+    Controlador c;
+    VistaControlador v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        imgContacto= (ImageView) this.findViewById(R.id.vh_img);
-        main_nombre = (TextView) this.findViewById(R.id.main_nombre);
-        main_telefono = (TextView) this.findViewById(R.id.main_telefono);
         btn_llamar = (Button) this.findViewById(R.id.btn_llamar);
         btn_llamar.setOnClickListener(this);
 
@@ -80,24 +78,25 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         contactos.add(new Modelo("Osvaldo", "Ramallo", "7345-4444"));
         contactos.add(new Modelo("Alfredo", "Garcia", "2364-2346"));
 
-        RecyclerView rv = (RecyclerView)this.findViewById(R.id.rv1);
-        rv.setLayoutManager(new GridLayoutManager(this,2));
+        RecyclerView rv = (RecyclerView) this.findViewById(R.id.rv1);
+        rv.setLayoutManager(new GridLayoutManager(this, 2));
         adaptador = new Adapter(this, contactos, this);
         rv.setAdapter(adaptador);
 
+        this.v = new VistaControlador(this);
+        this.c = new Controlador(contactos, v);
+
     }
-
-
 
     @Override
     public void onItemClick(View view, int position) {
-        //TODO: Setear Textos
+        c.seleccion(position);
     }
 
     @Override
     public void onClick(View v) {
-        //TODO: completar lo que falta
-
+        TextView tvTelefono = (TextView) this.findViewById(R.id.main_telefono);
+        Intent callIntent = new Intent(Intent.ACTION_CALL,Uri.parse("tel:"+tvTelefono.getText().toString()));
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 0);
         }else{
@@ -107,20 +106,21 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //TODO: Cargar menu desde archivo xml
+        getMenuInflater().inflate(R.menu.menu_principal, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()){
             case R.id.salir:
-                //TODO: Completar para salir de la aplicacion
+                finish();
                 break;
             case R.id.nuevo:
-                //TODO: mostrar texto por consola
+                Log.d("Boton nuevo","Presione el boton nuevo");
                 break;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 }

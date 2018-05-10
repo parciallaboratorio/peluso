@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">1° Parcial</string>
+    <string name="nombre">Nombre</string>
+    <string name="apellido">Apellido</string>
+    <string name="telefono">Telefono</string>
+    <string name="llamar">Llamar</string>
 </resources>

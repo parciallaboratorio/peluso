@@ -49,7 +49,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Completar con:Llamar"
+            android:text="@string/llamar"
             android:id="@+id/btn_llamar"/>
 </LinearLayout>
 
